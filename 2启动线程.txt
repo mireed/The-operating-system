@@ -1,0 +1,41 @@
+2.启动进程
+2.1fork()
+   在fork()之后，父子进程都会执行fork之后的指令
+   子进程复制父进程的资源
+   pid=fork();
+     if(pid==0)
+       {子进程}
+     else
+       {父进程}
+   COW写时复制
+     为了降低开销，后来确实发生了写入时，才产生复制动作，每个进程拿到属于自己的一份
+
+2.2vfork()
+   必须用exit(0)退出
+   父子进程共享地址空间，子进程修改变量将影响父进程
+
+2.3exec族
+    v:vector//参数以数组形式
+    l:list//参数排列在后面
+    p:path//PATH环境变量,表示使用文件名，并从PATH环境下进行搜索。
+    e:envir//自己创建环境变量
+        char* const argv[] = {"ls", "-l", NULL}; // 1
+        char* const envp1[] = {"PATH=.", "XX=YY", NULL}; // 2
+        char* const envp2[] = {"PATH=/bin:/sbin", "XX=YY", NULL}; // 3
+        char* const envp3[] = {"AA=BB", "XX=YY", NULL}; // 4
+   （1）int execl(const char *path,const char *arg…..);（库函数） 
+                 // execl("/bin/ls", "ls", "-l", NULL);
+   （2）int execv(const char path,char const argv[]);（系统调用函数） 
+                 // execv("/bin/ls", argv);
+   （3）int execle(const char path,const char *arg…..,char const envp[]);（库函数） 
+                 // execle("ls", "ls", "-l", NULL, envp);
+   （4）int execve(const char* path,char* const argv[],char* const envp[]);（库函数）
+                // execve("ls", argv, envp2);  
+   （5）int execlp(const char file,const char arg,…);（库函数） 
+                // execlp("ls", "ls", "-l", NULL);
+   （6） int execvp(const char file,char const argv[]);（库函数）
+               // execvp("ls", argv);
+
+2.4system
+   执行shell
+   system("ls -al");

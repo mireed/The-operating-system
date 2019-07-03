@@ -1,0 +1,31 @@
+2.实现
+2.1创建
+   int pthread_create(pthread_t *restrict tidp,const pthread_attr_t *restrict attr,void *(*start_rtn)(void),void *restrict arg)
+      pthread_t id;
+      pthread_create(&id,NULL,(void*)myThread,NULL);
+      pthread_t *restrict tidp                    //要创建的线程的线程ID指针
+      const pthread_attr_t *restrict attr         //创建线程时的线程属性
+      void *(*start_rtn)(void)                    //返回值是void类型的指针函数
+      void *restrict arg start_rtn 的形参
+
+2.2终止
+   void pthread_exit(void *retval)
+      如果仅主线程调用pthread_exit，只有主线程终止，进程及进程内其他线程继续存在，当所有线程终止时，进程也将终止
+   从执行函数返回，返回值是退出码
+   线程被同一进程的其他线程取消
+   特殊情况:当初始线程（即调用main的线程），从main调用返回或调用exit时，整个进程及其所有的线程将终止
+
+2.3等待终止
+   int pthread_join(thread_t tid,void **status)
+      如果多个线程等待一个线程完成，只有一个等待线程成功返回，其余的失败并返回ESRCH错误
+      仅适用于非分离的目标线程
+
+2.4等待终止与终止
+   子线程使用exit 则可以结束整个进程；
+   使用join的线程会阻塞；
+   主线程结束，整个程序结束，所以主线程最好用join等子线程结束，使用一个join可以等多个线程；
+   主线程运行pthread_exit结束主线程，不会结束子线程；
+   子线程最终要用pthread_join或设置为分离状态来结束线程，否则资源不会被完全释放；
+   线程是分离的，则不需要pthread_exit，线程结束自己释放所有资源；
+   线程是非分离的，线程会保留线程ID号，知道其他线程通过joining这个线程确认其已死亡。join的结果是joining线程得到已终止线程的退出状态，已终止下线程会消失；
+   线程自己运行结束，或调用pthread_exit结束，会释放自己独有的空间资源。

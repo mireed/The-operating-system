@@ -1,0 +1,38 @@
+3.多线程同步
+3.1互斥锁
+   3.1.1初始化
+      int pthread_mutex_init(pthread_mutex_t* mutex,const pthread_mutexattr_t* mutexattr);
+         mutexattr:
+         PITHREAD_MUTEX_INITIALIZER
+         PITHREAD_RECURSIVE_MUTEX_INITIALIZER_NP
+         PTHREAD_ERRORCHECK_MUTEX_INITIALIZER_NP
+   3.1.2互斥操作函数
+      int pthread_mutex_lock(pthread_mutex_t *mutex);
+      int pthread_mutex_trylock(pthread_mutex_t *mutex);
+         互斥被锁住时返回EBUSY，未上锁时上锁
+      int pthread_mutex_unlock(pthread_mutex_t *mutex);
+      int pthread_mutex_destory(pthread_mutex_t *mutex);
+   3.1.3死锁
+      上锁的再次上锁
+   3.1.4设置互斥锁属性
+      int pthread_mutexattr_settype(pthread_mutexattr_t *attr,int kind);
+         三种：
+             快速型
+             同意线程给已上锁的上锁
+             错误检测型
+                 已经上锁的，后续上锁将会失败，不会阻塞
+         kind:
+         PTHREAD_MUTEX_FAST_NP
+         PTHREAD_MUTEX_RECURSIVE_NP
+         PTHREAD_MUTEX_ERRORCHECK_NP
+
+3.2条件变量
+   int pthread_cond_init(pthread_cond_t *cv,const pthread_condattr_t *cattr);
+   int pthread_cond_wait(pthread_cond_t *cv,pthread_mutex_t *mutex);
+   int pthread_cond_timedwait(pthread_cond_t *cv,pthread_mutex_t *mp, const structtimespec * abstime);
+      等待条件变量到指定时间
+   int pthread_cond_signal(pthread_cond_t *cv);
+      通知等待条件变量的单个线程
+   int pthread_cond_broadcast(pthread_cond_t *cv);
+      通知等待条件变量的所有线程
+   int pthread_cond_destroy(pthread_cond_t *cv);         

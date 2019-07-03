@@ -1,0 +1,5 @@
+1.进程综述
+系统中的每个进程必有一个父进程。
+进程间的关系存放在进程描述符中。每个task_struct都包含一个指向其父进程tact_struct、叫做parent的指针.还包含一个称为children的子进程链表.
+对于当前进程，可以通过下面的代码获取其符进程的进程描述符：
+    struct task_struct *my_parent = current->parent;
